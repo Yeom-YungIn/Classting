@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Page} from "../entity/page.entity";
 import {Repository} from "typeorm";
-import {PageDto} from "../dto/page.dto";
-import {validate} from "class-validator";
 
 @Injectable()
 export class PageService {
