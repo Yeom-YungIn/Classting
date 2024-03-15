@@ -3,7 +3,6 @@ import { SubscribeService } from "./subscribe.service";
 import {Repository} from "typeorm";
 import {Subscribe} from "../entity/subscribe.entity";
 import {getRepositoryToken} from "@nestjs/typeorm";
-import {response} from "express";
 import {NotFoundException} from "@nestjs/common";
 
 describe('SchoolService', () => {

@@ -84,7 +84,7 @@ describe('newsService', () => {
       expect(repository.findBy).toBeCalled();
     });
 
-    it('should return respository.findBy result', async () => {
+    it('should return repository.findBy result', async () => {
       const foundNews = await service.getNewsList(pageId);
       expect(foundNews).toBe(foundNews);
     });
