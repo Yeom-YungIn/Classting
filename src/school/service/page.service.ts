@@ -13,7 +13,8 @@ export class PageService {
 
     async createPage(newPageData: {schoolName: string, location: string}): Promise<Page> {
         const newPage: Page = this.pageRepository.create({
-            ...newPageData,
+            schoolName,
+            location,
         });
 
         return await this.pageRepository.save(newPage);
