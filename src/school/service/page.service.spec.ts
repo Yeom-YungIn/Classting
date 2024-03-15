@@ -3,16 +3,18 @@ import {PageService} from "./page.service";
 import {Repository} from "typeorm";
 import {Page} from "../entity/page.entity";
 import {getRepositoryToken} from "@nestjs/typeorm";
-import {PageDto} from "../dto/page.dto";
-
 
 describe('pageService', () => {
+  let pageId: number, schoolName: string, location: string;
   let service: PageService;
   let repository: Repository<Page>;
-  let newPage: PageDto;
+  let page: Page;
 
   beforeEach(async () => {
-    newPage = { schoolName: 'schoolName', location: 'location'};
+    pageId = 1, schoolName = "new school", location = "seoul";
+    page = new Page();
+    page.pageId = pageId;
+    page.schoolName = "schoolName";
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -32,8 +34,35 @@ describe('pageService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('createPage', () => {
+  describe('findPageById', () => {
+    let foundPage;
     beforeEach(() => {
+      foundPage = {...page};
+      repository.findOneBy = jest.fn().mockResolvedValueOnce(foundPage);
+    })
+
+    it('should be a defined & function', () => {
+      expect(service.findPageById).toBeDefined();
+      expect(typeof service.findPageById).toBe('function');
+    });
+
+    it('should have called repository.findOneBy', async () => {
+      await service.findPageById(pageId);
+      expect(repository.findOneBy).toHaveBeenCalledWith({pageId});
+    })
+
+    it(`should return foundPage`, async () => {
+      const result: Page = await service.findPageById(pageId)
+      expect(result).toBeDefined();
+      expect(result.pageId).toEqual(foundPage.pageId);
+      expect(result.schoolName).toEqual(foundPage.schoolName);
+    })
+  });
+
+  describe('createPage', () => {
+    let newPage;
+    beforeEach(() => {
+      newPage = {...page};
       repository.create = jest.fn();
       repository.save = jest.fn().mockResolvedValueOnce(newPage);
     })
@@ -44,15 +73,17 @@ describe('pageService', () => {
     });
 
     it('should have called repository.{save & create} with newPage', async () => {
-      await service.createPage(newPage);
-      expect(repository.create).toHaveBeenCalledWith(newPage);
+      await service.createPage(schoolName, location);
+      expect(repository.create).toHaveBeenCalledWith({schoolName, location});
       expect(repository.save).toBeCalled();
-    })
+    });
 
     it(`should return newPage`, async () => {
-      const result: Page = await service.createPage(newPage)
+      const result: Page = await service.createPage(schoolName, newPage);
+      expect(result).toBeDefined();
+      expect(result.pageId).toEqual(newPage.pageId);
       expect(result.schoolName).toEqual(newPage.schoolName);
       expect(result.location).toEqual(newPage.location);
-    })
+    });
   });
 });
