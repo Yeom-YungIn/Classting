@@ -1,22 +1,34 @@
-import {Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    ManyToMany,
+    PrimaryColumn,
+    UpdateDateColumn
+} from "typeorm";
+import {Page} from "./page.entity";
 
+@Entity()
 export class Subscribe {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn({type: "varchar"})
     userId: string;
 
-    @PrimaryGeneratedColumn()
-    channelId: string;
+    @PrimaryColumn({type: "int"})
+    pageId: number;
 
-    @CreateDateColumn()
+    @CreateDateColumn({type: "timestamp", nullable: false})
     createdAt: Date;
 
-    @UpdateDateColumn()
-    updateAt: Date;
+    @UpdateDateColumn({type: "timestamp", nullable: false})
+    updatedAt: Date;
 
-    @Column()
+    @Column({type: "boolean", nullable: false})
     isDeleted: boolean;
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({type: "timestamp", nullable: true})
     deletedAt: Date;
 
+    @ManyToMany(() => Page, (Page) => Page.subscribe, {eager: false})
+    page: Page[];
 }
