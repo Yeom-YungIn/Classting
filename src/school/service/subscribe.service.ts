@@ -42,6 +42,4 @@ export class SubscribeService {
             return { result: "success", pageId: foundSubscribe.pageId }
         }
     }
-
-
 }

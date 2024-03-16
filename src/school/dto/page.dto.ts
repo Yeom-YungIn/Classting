@@ -1,6 +1,6 @@
 import {IsString} from "class-validator";
 
-export class PageDto {
+export class CreatePageDto {
     @IsString()
     schoolName: string;
 

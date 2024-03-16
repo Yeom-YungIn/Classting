@@ -13,28 +13,20 @@ export class NewsService {
 
     async createNews(newsObj: {pageId: number, content: string}): Promise<News> {
         const newNews = this.newsRepository.create({
-            ...newsObj
+            ...newsObj,
+            publisherId: "test"
         });
 
         return await this.newsRepository.save(newNews);
     }
 
     async getNewsList(pageId: number) {
-        const where = {
-            pageId,
-            order: {createAt: 'DESC'},
+        const found = await this.newsRepository.find({
+            where: { pageId },
+            order: { createdAt: 'DESC' },
             skip: 0,
             take: 10,
-        };
-
-        const option = {
-            where,
-            order: {createAt: 'DESC'},
-            skip: 0,
-            take: 10,
-        }
-
-        const found = await this.newsRepository.findBy(where)
+        });
         return found;
     }
 
@@ -46,22 +38,22 @@ export class NewsService {
         return foundNews;
     }
 
-    async updateNews(newsId: number, content: string) {
+    async updateNews(newsId: number, content: string): Promise<{ result: string, newsId: number}> {
         const foundNews: News = await this.getNewsById(newsId);
 
         const updatedNews = await this.newsRepository.update({newsId: foundNews.newsId}, {content});
 
         if (updatedNews.affected) {
-            return { result: "success", ...foundNews }
+            return { result: "success", newsId: foundNews.newsId }
         }
     }
 
     async deleteNews(newsId: number) {
         const foundNews: News = await this.getNewsById(newsId);
 
-        const deletedNews = await this.newsRepository.delete({newsId: foundNews.newsId});
+        const deletedNews = await this.newsRepository.update({newsId: foundNews.newsId}, {isDeleted: true, deletedAt: new Date()});
         if (deletedNews.affected) {
-            return { result: "success", ...foundNews }
+            return { result: "success", newsId: foundNews.newsId }
         }
     }
 }

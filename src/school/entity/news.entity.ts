@@ -30,7 +30,7 @@ export class News {
     updatedAt: Date;
 
     @Column({type: "boolean", nullable: false})
-    isDeleted: boolean;
+    isDeleted: boolean  = false;
 
     @DeleteDateColumn({type: "timestamp", nullable: true})
     deletedAt: Date;

@@ -6,14 +6,19 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {Page} from "./entity/page.entity";
 import {News} from "./entity/news.entity";
 import {Subscribe} from "./entity/subscribe.entity";
+import {SubscribeService} from "./service/subscribe.service";
+import {SchoolNewsController} from "./controller/school-news.controller";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Page, News, Subscribe])],
-  controllers: [SchoolPageController],
+  controllers: [
+      SchoolPageController,
+      SchoolNewsController,
+  ],
   providers: [
       NewsService,
       PageService,
-      Subscribe,
+      SubscribeService,
   ]
 })
 export class SchoolModule {}
