@@ -5,8 +5,7 @@ import {User} from "../entity/user.entity";
 import {getRepositoryToken} from "@nestjs/typeorm";
 import {AuthCredentialDto} from "../../common/dto/auth.dto";
 import {JwtService} from "@nestjs/jwt";
-import * as bycrpt from 'bcryptjs'
-const TEST_NAME: string = "TEST";
+const TEST_ID: string = "TEST";
 const TEST_PW: string = "1234";
 
 
@@ -45,9 +44,7 @@ describe('AuthService', () => {
 
     beforeEach(() => {
       loginDto = new AuthCredentialDto();
-      loginDto.name = TEST_NAME;
-      loginDto.password = TEST_PW;
-      bycrpt.compare = jest.fn().mockResolvedValue(true);
+      loginDto.id = TEST_ID;
     });
 
     it('should be defined & function', () => {
@@ -57,7 +54,7 @@ describe('AuthService', () => {
 
     it('should call userRepository.findOneBy & jwtService', async () => {
       const foundUser: User = new User();
-      foundUser.name = TEST_NAME;
+      foundUser.id = TEST_ID;
       foundUser.password = TEST_PW;
 
       repository.findOneBy = jest.fn().mockResolvedValueOnce(foundUser);
@@ -65,13 +62,13 @@ describe('AuthService', () => {
 
       await service.signIn(loginDto);
 
-      expect(repository.findOneBy).toHaveBeenCalledWith({ name: TEST_NAME });
+      expect(repository.findOneBy).toHaveBeenCalledWith({ name: TEST_ID });
       expect(jwtService.sign).toHaveBeenCalled();
     });
 
     it('should return accessToken', async () => {
       const foundUser: User = new User();
-      foundUser.name = TEST_NAME;
+      foundUser.id = TEST_ID;
       foundUser.password = TEST_PW;
 
       repository.findOneBy = jest.fn().mockResolvedValueOnce(foundUser);
