@@ -20,8 +20,8 @@ import {AuthGuard} from "@nestjs/passport";
 import {UserRoleType} from "../../auth/types";
 
 
-@ApiTags("학교 페이지 컨트롤러")
-@Controller('school-page')
+@ApiTags("/school-page")
+@Controller('/school-page')
 @UseGuards(AuthGuard())
 export class SchoolPageController {
     constructor(

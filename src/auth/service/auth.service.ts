@@ -2,7 +2,6 @@ import {Injectable, UnauthorizedException} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {User} from "../entity/user.entity";
-import * as bycrpt from 'bcryptjs'
 import {JwtService} from "@nestjs/jwt";
 import {AuthCredentialDto} from "../dto/auth.dto";
 
@@ -16,6 +15,10 @@ export class AuthService {
     ) {
     }
 
+    /**
+     * 로그인
+     * @param AuthCredentialDto
+     * */
     async signIn(authCredentialDto: AuthCredentialDto): Promise<{result: string, accessToken: string}> {
         const where = {...authCredentialDto};
         const foundUser: User = await this.userRepository.findOneBy(where);

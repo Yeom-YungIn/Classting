@@ -1,12 +1,13 @@
 import {Body, Controller, Delete, Param, Patch, Post, UseGuards} from '@nestjs/common';
 import {NewsService} from "../service/news.service";
 import {CreateNewsDto, UpdateNewsDto} from "../dto/news.dto";
-import {ApiOperation} from "@nestjs/swagger";
+import {ApiOperation, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "@nestjs/passport";
 import {GetUser} from "../../common/decorator/get-user-decorator";
 
 
-@Controller('school-news')
+@ApiTags('/school-news')
+@Controller('/school-news')
 @UseGuards(AuthGuard())
 export class SchoolNewsController {
     constructor(
