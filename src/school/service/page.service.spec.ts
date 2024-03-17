@@ -60,7 +60,7 @@ describe('pageService', () => {
   });
 
   describe('createPage', () => {
-    let newPage;
+    let newPage, publisherId = 'admin';
     beforeEach(() => {
       newPage = {...page};
       repository.create = jest.fn();
@@ -73,13 +73,13 @@ describe('pageService', () => {
     });
 
     it('should have called repository.{save & create} with newPage', async () => {
-      await service.createPage(schoolName, location);
-      expect(repository.create).toHaveBeenCalledWith({schoolName, location});
+      await service.createPage(schoolName, location, publisherId);
+      expect(repository.create).toHaveBeenCalledWith({schoolName, location, publisherId});
       expect(repository.save).toBeCalled();
     });
 
     it(`should return newPage`, async () => {
-      const result: Page = await service.createPage(schoolName, newPage);
+      const result: Page = await service.createPage(schoolName, newPage, publisherId);
       expect(result).toBeDefined();
       expect(result.pageId).toEqual(newPage.pageId);
       expect(result.schoolName).toEqual(newPage.schoolName);

@@ -10,6 +10,10 @@ export class PageService {
         private readonly pageRepository: Repository<Page>
     ) {
     }
+    /**
+     * 페이지 ID 조회
+     * @param pageId 페이지 ID
+     * */
     async findPageById(pageId: number): Promise<Page> {
         const foundPage = await this.pageRepository.findOneBy({pageId});
         if (!foundPage) {
@@ -18,11 +22,17 @@ export class PageService {
         return foundPage
     }
 
-    async createPage(schoolName: string, location: string): Promise<Page> {
+    /**
+     * 페이지 생성
+     * @param schoolName 학교명
+     * @param location 학교위치
+     * @param publisherId 생성자 ID
+     * */
+    async createPage(schoolName: string, location: string, publisherId: string): Promise<Page> {
         const newPage: Page = this.pageRepository.create({
             schoolName,
             location,
-            publisherId: "test"
+            publisherId,
         });
 
         return await this.pageRepository.save(newPage);

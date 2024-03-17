@@ -60,7 +60,7 @@ describe('AuthService', () => {
 
       await service.signIn(loginDto);
 
-      expect(repository.findOneBy).toHaveBeenCalledWith({ name: TEST_ID });
+      expect(repository.findOneBy).toHaveBeenCalledWith({ id: TEST_ID });
       expect(jwtService.sign).toHaveBeenCalled();
     });
 
@@ -70,13 +70,13 @@ describe('AuthService', () => {
 
       repository.findOneBy = jest.fn().mockResolvedValueOnce(foundUser);
 
-      jwtService.sign = jest.fn().mockReturnValueOnce('1234');
+      jwtService.sign = jest.fn().mockReturnValueOnce('accessToken');
 
       const result = await service.signIn(loginDto);
 
       expect(result).toBeDefined();
       expect(result.result).toBe('success');
-      expect(result.accessToken).toBe('1234');
+      expect(result.accessToken).toBe('accessToken');
     });
   });
 });

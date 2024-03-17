@@ -3,6 +3,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {News} from "../entity/news.entity";
 import {Repository} from "typeorm";
 
+
 @Injectable()
 export class NewsService {
     constructor(
@@ -11,15 +12,27 @@ export class NewsService {
     ) {
     }
 
-    async createNews(newsObj: {pageId: number, content: string}): Promise<News> {
+
+    /**
+     * 뉴스 생성
+     * @param pageId 페이지 ID
+     * @param content 뉴스 내용
+     * @param publisherId 생성자 ID
+     * */
+    async createNews(pageId: number, content: string, publisherId: string): Promise<News> {
         const newNews = this.newsRepository.create({
-            ...newsObj,
-            publisherId: "test"
+            pageId,
+            content,
+            publisherId,
         });
 
         return await this.newsRepository.save(newNews);
     }
 
+    /**
+     * 페이지 뉴스 조회
+     * @param pageId 페이지 ID
+     * */
     async getNewsList(pageId: number) {
         const found = await this.newsRepository.find({
             where: { pageId },
@@ -30,6 +43,10 @@ export class NewsService {
         return found;
     }
 
+    /**
+     * 뉴스 조회
+     * @param newsId 뉴스 ID
+     * */
     async getNewsById(newsId: number) {
         const foundNews: News = await this.newsRepository.findOneBy({newsId});
         if (!foundNews) {
@@ -38,6 +55,11 @@ export class NewsService {
         return foundNews;
     }
 
+    /**
+     * 뉴스 수정
+     * @param newsId 뉴스 ID
+     * @param content  뉴스 내용
+     * */
     async updateNews(newsId: number, content: string): Promise<{ result: string, newsId: number}> {
         const foundNews: News = await this.getNewsById(newsId);
 
@@ -48,6 +70,10 @@ export class NewsService {
         }
     }
 
+    /**
+     * 뉴스 삭제
+     * @param newsId 뉴스 ID
+     * */
     async deleteNews(newsId: number) {
         const foundNews: News = await this.getNewsById(newsId);
 

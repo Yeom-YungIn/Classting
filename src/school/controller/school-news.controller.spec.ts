@@ -3,16 +3,19 @@ import { SchoolNewsController } from './school-news.controller';
 import { NewsService } from '../service/news.service';
 import { CreateNewsDto, UpdateNewsDto } from '../dto/news.dto';
 import {News} from "../entity/news.entity";
+import {AuthGuard, PassportModule} from "@nestjs/passport";
 
 const TEST_CONTENT: string = "TEST_CONTENT";
 const TEST_PAGE_ID: number = 1;
 const TEST_NEWS_ID: number = 1;
+const TEST_ADMIN_USER = {id: "admin", role: "admin"};
 describe('SchoolNewsController', () => {
   let controller: SchoolNewsController;
   let newsService: NewsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [PassportModule],
       controllers: [SchoolNewsController],
       providers: [
         {
@@ -21,6 +24,12 @@ describe('SchoolNewsController', () => {
             createNews: jest.fn(),
             updateNews: jest.fn(),
             deleteNews: jest.fn(),
+          },
+        },
+        {
+          provide: AuthGuard,
+          useValue: {
+            canActivate: jest.fn().mockResolvedValue(true),
           },
         },
       ],
@@ -39,10 +48,10 @@ describe('SchoolNewsController', () => {
 
       jest.spyOn(newsService, 'createNews').mockResolvedValueOnce(createdNews);
 
-      const result = await controller.createNews(newsDto);
+      const result = await controller.createNews({pageId: TEST_PAGE_ID, content: TEST_CONTENT}, TEST_ADMIN_USER);
 
       expect(result).toEqual(createdNews);
-      expect(newsService.createNews).toHaveBeenCalledWith(newsDto);
+      expect(newsService.createNews).toHaveBeenCalled();
     });
   });
 

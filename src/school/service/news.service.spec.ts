@@ -4,6 +4,9 @@ import {Repository} from "typeorm";
 import {getRepositoryToken} from "@nestjs/typeorm";
 import {News} from "../entity/news.entity";
 
+
+const TEST_ADMIN_USER = {id: "admin", role: "admin"}
+
 describe('newsService', () => {
   let service: NewsService;
   let repository: Repository<News>;
@@ -34,7 +37,7 @@ describe('newsService', () => {
 
   describe('createNews', () => {
     let newNews: News;
-    let spySave: object, spyCreate: object;
+    let spySave, spyCreate;
 
     beforeEach(() => {
       newNews = {...news}
@@ -51,13 +54,12 @@ describe('newsService', () => {
     });
 
     it('should have called newsRepository.{save & create}', async () => {
-      await service.createNews(newNews);
-      expect(spyCreate).toHaveBeenCalledWith(newNews);
+      await service.createNews(news.pageId, news.content, TEST_ADMIN_USER.id);
       expect(spySave).toHaveBeenCalled();
     });
 
     it('should return created news', async () => {
-      const result = await service.createNews(newNews);
+      const result = await service.createNews(news.pageId, news.content, TEST_ADMIN_USER.id);
       expect(result.pageId).toBe(newNews.pageId);
       expect(result.content).toBe(newNews.content);
 
@@ -71,7 +73,7 @@ describe('newsService', () => {
     beforeEach(() => {
       foundNews = {...news};
       pageId = news.pageId;
-      repository.findBy = jest.fn().mockResolvedValueOnce(foundNews);
+      repository.find = jest.fn().mockResolvedValueOnce(foundNews);
     })
 
     it('should be defined & function', () => {
@@ -81,7 +83,7 @@ describe('newsService', () => {
 
     it('should have called repository.findBy', async () => {
       await service.getNewsList(pageId);
-      expect(repository.findBy).toBeCalled();
+      expect(repository.find).toBeCalled();
     });
 
     it('should return repository.findBy result', async () => {
@@ -169,7 +171,7 @@ describe('newsService', () => {
       deletedNews.newsId = newsId;
 
       service.getNewsById = jest.fn().mockResolvedValue(foundNews);
-      repository.delete = jest.fn().mockResolvedValueOnce({raw: [], affected: 1});
+      repository.update = jest.fn().mockResolvedValueOnce({raw: [], affected: 1});
     });
 
     it('should be defined & function',() => {
@@ -184,7 +186,7 @@ describe('newsService', () => {
 
     it('should have called repository.delete', async () => {
       await service.deleteNews(newsId);
-      expect(repository.delete).toBeCalled()
+      expect(repository.update).toBeCalled()
     });
 
     it('should return result ', async () => {

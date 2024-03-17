@@ -10,11 +10,19 @@ export class SubscribeService {
         private readonly subscribeRepository: Repository<Subscribe>
     ) {
     }
-
+    /**
+     * 페이지 구독 목록 조회
+     * @param userId 유저 ID
+     * */
     async getSubscribeList(userId: string): Promise<Subscribe[]> {
         return this.subscribeRepository.findBy({userId});
     }
 
+    /**
+     * 페이지 구독 여부 조회
+     * @param pageId 페이지 ID
+     * @param userId 유저 ID
+     * */
     async getSubscribePage(pageId: number, userId: string): Promise<Subscribe> {
         const foundSubscribePage: Subscribe =  await this.subscribeRepository.findOneBy({pageId, userId})
         if(!foundSubscribePage) {
@@ -23,6 +31,11 @@ export class SubscribeService {
         return foundSubscribePage;
     }
 
+    /**
+     * 구독 생성
+     * @param pageId 페이지 ID
+     * @param userId 유저 ID
+     * */
     async createSubscribe(pageId: number, userId: string) {
         const createdSubscribe = await this.subscribeRepository.create({
             pageId,
@@ -32,6 +45,11 @@ export class SubscribeService {
         return await this.subscribeRepository.save(createdSubscribe);
     }
 
+    /**
+     * 구독 삭제
+     * @param pageId 페이지 ID
+     * @param userId 유저 ID
+     * */
     async deleteSubscribe(pageId: number, userId: string): Promise<{result: string, pageId: number}> {
         const foundSubscribe: Subscribe = await this.getSubscribePage(pageId, userId);
 
