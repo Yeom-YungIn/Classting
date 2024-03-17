@@ -8,9 +8,17 @@ import {News} from "./entity/news.entity";
 import {Subscribe} from "./entity/subscribe.entity";
 import {SubscribeService} from "./service/subscribe.service";
 import {SchoolNewsController} from "./controller/school-news.controller";
+import {AuthModule} from "../auth/auth.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Page, News, Subscribe])],
+    imports: [
+        TypeOrmModule.forFeature([
+            Page,
+            News,
+            Subscribe
+        ]),
+        AuthModule,
+    ],
   controllers: [
       SchoolPageController,
       SchoolNewsController,

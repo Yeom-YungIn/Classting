@@ -1,9 +1,13 @@
-import {Body, Controller, Delete, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Param, Patch, Post, UseGuards} from '@nestjs/common';
 import {NewsService} from "../service/news.service";
 import {CreateNewsDto, UpdateNewsDto} from "../dto/news.dto";
 import {ApiOperation} from "@nestjs/swagger";
+import {AuthGuard} from "@nestjs/passport";
+import {GetUser} from "../../common/decorator/get-user-decorator";
+
 
 @Controller('school-news')
+@UseGuards(AuthGuard())
 export class SchoolNewsController {
     constructor(
         private readonly newsService : NewsService
@@ -12,8 +16,12 @@ export class SchoolNewsController {
 
     @Post()
     @ApiOperation({summary: "뉴스 생성 API", description: "학교 관지라는 학교 페이지 내에 소식을 작성할 수 있다."})
-    async createNews(@Body() newsDto: CreateNewsDto) {
-        return await this.newsService.createNews(newsDto);
+    async createNews(
+        @Body() newsDto: CreateNewsDto,
+        @GetUser() user
+    ) {
+        const {pageId, content} = newsDto;
+        return await this.newsService.createNews(pageId, content, user.id);
     }
 
     @Patch('/:newsId')
