@@ -1,21 +1,17 @@
-import {Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryColumn } from "typeorm";
+import {UserRoleType, UserStateType} from "../types";
 
 
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
 
-    @Column({comment: "사용자명", type: "varchar"})
-    name: string;
-
-    @Column({comment: "비밀번호", type: "varchar"})
-    password: string;
+    @PrimaryColumn({comment: "사용자명 ID", type: "varchar"})
+    id: string;
 
     @Column({comment: "권한", type: "varchar"})
-    role: RoleTypes;
+    role: UserRoleType;
 
     @Column()
-    state: UserStates;
+    state: UserStateType;
 
     @CreateDateColumn()
     createDate: Date;

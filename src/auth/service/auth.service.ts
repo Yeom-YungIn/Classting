@@ -4,7 +4,7 @@ import {Repository} from "typeorm";
 import {User} from "../entity/user.entity";
 import * as bycrpt from 'bcryptjs'
 import {JwtService} from "@nestjs/jwt";
-import {AuthCredentialDto} from "../../common/dto/auth.dto";
+import {AuthCredentialDto} from "../dto/auth.dto";
 
 
 @Injectable()
@@ -17,11 +17,10 @@ export class AuthService {
     }
 
     async signIn(authCredentialDto: AuthCredentialDto): Promise<{result: string, accessToken: string}> {
-        const {name, password} = authCredentialDto;
-        const foundUser: User = await this.userRepository.findOneBy({name});
-        const compare = await bycrpt.compare(password, foundUser.password);
-        if (foundUser && compare) {
-            const payload = { name: foundUser.name, role: foundUser.role }
+        const where = {...authCredentialDto};
+        const foundUser: User = await this.userRepository.findOneBy(where);
+        if (foundUser) {
+            const payload = { name: foundUser.id, role: foundUser.role }
             const accessToken = this.jwtService.sign(payload);
             return {result: 'success', accessToken};
         }else {
