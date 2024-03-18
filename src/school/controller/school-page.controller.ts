@@ -5,7 +5,6 @@ import {
     Param,
     Patch,
     Post, Query,
-    UnauthorizedException,
     UseGuards
 } from '@nestjs/common';
 import {PageService} from "../service/page.service";
@@ -120,10 +119,4 @@ export class SchoolPageController {
         return await this.newsService.getNewsList(userSubscribePage.pageId,createdAt, updatedAt, skip, take);
     }
 
-    // // @Get("/subscription/feeds")
-    // @ApiOperation({summary: "구독 페이지별 뉴스 조회 API", description: "학생은 구독중인 학교 페이지별 소식을 볼 수 있다."})
-    // async getScribeFeeds(): Promise<News[]> {
-    //     const userSubscribePage = await this.subscribeService.getSubscribeList('test');
-    //     return await this.newsService.getNewsList(pageId);
-    // }
 }

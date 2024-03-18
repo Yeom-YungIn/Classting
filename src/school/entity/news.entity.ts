@@ -35,8 +35,7 @@ export class News {
     @DeleteDateColumn({type: "timestamp", nullable: true})
     deletedAt: Date;
 
-    @ManyToOne(() => Page,(page) => page.news, {eager: false})
-    @JoinColumn({name: 'pageId'})
+    @ManyToOne(() => Page,(Page) => Page.news, { eager: false })
+    @JoinColumn({ name: "pageId" })
     page: Page;
-
 }

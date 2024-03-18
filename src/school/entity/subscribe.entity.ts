@@ -1,9 +1,9 @@
 import {
     Column,
     CreateDateColumn,
-    DeleteDateColumn,
     Entity,
-    ManyToMany,
+    JoinColumn,
+    ManyToOne,
     PrimaryColumn,
     UpdateDateColumn
 } from "typeorm";
@@ -26,9 +26,10 @@ export class Subscribe {
     @Column({type: "boolean", nullable: false})
     isDeleted: boolean  = false;
 
-    @DeleteDateColumn({type: "timestamp", nullable: false})
+    @Column({type: "timestamp", nullable: true})
     deletedAt: Date;
 
-    @ManyToMany(() => Page, (Page) => Page.subscribe, {eager: false})
-    page: Page[];
+    @ManyToOne(() => Page, (Page) => Page.subscribe, {eager: true})
+    @JoinColumn({name: 'pageId'})
+    page: Page;
 }

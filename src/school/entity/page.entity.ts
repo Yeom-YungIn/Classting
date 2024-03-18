@@ -1,7 +1,7 @@
 import {
     Column,
     CreateDateColumn,
-    DeleteDateColumn, Entity, ManyToMany,
+    DeleteDateColumn, Entity, JoinColumn,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn
@@ -35,10 +35,11 @@ export class Page {
     @DeleteDateColumn({type: "timestamp", nullable: true})
     deletedAt: Date;
 
-    @OneToMany(() => News, (news) => news.page, { eager: false })
+    @OneToMany(() => News, (News) => News.page, { eager: true })
+    @JoinColumn({ name: "pageID" })
     news: News[];
 
-    @ManyToMany(() => Subscribe, (Subscribe) => Subscribe.page, {eager: false})
+    @OneToMany(() => Subscribe, (Subscribe) => Subscribe.page, {eager: false})
     subscribe: Subscribe[];
 
 }

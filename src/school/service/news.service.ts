@@ -44,8 +44,7 @@ export class NewsService {
         }
         const foundNewsList: News[] = await this.newsRepository.find({
             where: {
-                pageId ,
-                isDeleted: false
+                pageId,
             },
             order: order,
             skip,
@@ -62,7 +61,6 @@ export class NewsService {
     async getNewsById(newsId: number): Promise<News> {
         const foundNews: News = await this.newsRepository.findOneBy({
             newsId,
-            isDeleted: false
         });
         if (!foundNews) {
             throw new NotFoundException();
@@ -89,7 +87,7 @@ export class NewsService {
      * 뉴스 삭제
      * @param newsId 뉴스 ID
      * */
-    async deleteNews(newsId: number) {
+    async deleteNews(newsId: number): Promise<{ result: string, newsId: number}> {
         const foundNews: News = await this.getNewsById(newsId);
 
         const deletedNews = await this.newsRepository.update({newsId: foundNews.newsId}, {isDeleted: true, deletedAt: new Date()});

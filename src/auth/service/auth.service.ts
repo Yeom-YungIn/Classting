@@ -31,7 +31,6 @@ export class AuthService {
     async signIn(authCredentialDto: AuthCredentialDto): Promise<{result: string, accessToken: string}> {
         const where = {...authCredentialDto};
         const foundUser: User = await this.userRepository.findOneBy(where);
-        console.log(foundUser)
         if (foundUser) {
             const payload = { id: foundUser.id, role: foundUser.role }
             const accessToken = this.jwtService.sign(payload);
