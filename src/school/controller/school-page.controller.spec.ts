@@ -2,12 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SchoolPageController } from './school-page.controller';
 import { PageService } from '../service/page.service';
 import { SubscribeService } from '../service/subscribe.service';
-import { CreatePageDto } from '../dto/page.dto';
 import { Subscribe } from '../entity/subscribe.entity';
 import {NewsService} from "../service/news.service";
 import {Page} from "../entity/page.entity";
-import {AuthGuard} from "@nestjs/passport";
-import {UserRoleType} from "../../auth/types";
+import {AuthGuard, PassportModule} from "@nestjs/passport";
+import {UserRoleType} from "../../common/types";
+import {CreatePageDTO} from "../dto/page-request.dto";
 
 const TEST_SCHOOL_NAME: string = "TEST_SCHOOL_NAME";
 const TEST_LOCATION: string = "TEST_LOCATION";
@@ -54,7 +54,7 @@ describe('SchoolPageController', () => {
           useValue: {
             canActivate: jest.fn().mockResolvedValue(true),
           },
-        },
+        }
       ],
     }).compile();
 
@@ -74,9 +74,9 @@ describe('SchoolPageController', () => {
 
   describe('savePage', () => {
     it('should call pageService.createPage with correct arguments', async () => {
-      const createPageDto: CreatePageDto = { schoolName: 'Test School', location: 'Test Location' };
-      await controller.savePage(createPageDto, ADMIN);
-      expect(pageService.createPage).toHaveBeenCalledWith(createPageDto.schoolName, createPageDto.location, ADMIN);
+      const createPageDTO: CreatePageDTO = { schoolName: 'Test School', location: 'Test Location' };
+      await controller.savePage(createPageDTO, ADMIN);
+      expect(pageService.createPage).toHaveBeenCalledWith(createPageDTO.schoolName, createPageDTO.location, ADMIN);
     });
   });
 

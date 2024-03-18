@@ -5,7 +5,7 @@ import {Subscribe} from "../entity/subscribe.entity";
 import {getRepositoryToken} from "@nestjs/typeorm";
 import {NotFoundException} from "@nestjs/common";
 
-describe('SchoolService', () => {
+describe('subscribeService', () => {
   let service: SubscribeService;
   let repository: Repository<Subscribe>;
   let pageId: number, userId: string;
@@ -49,7 +49,7 @@ describe('SchoolService', () => {
 
     it('should have call service.getSubscribePage & repository.update', async () => {
       await service.getSubscribeList(userId);
-      expect(repository.findBy).toHaveBeenCalledWith({userId});
+      expect(repository.findBy).toHaveBeenCalledWith({userId, isDeleted: false});
     });
 
     it('should return result', async () => {
@@ -79,7 +79,7 @@ describe('SchoolService', () => {
 
     it('should have call repository.findOneBy', async () => {
       await service.getSubscribePage(pageId, userId);
-      expect(repository.findOneBy).toHaveBeenCalledWith({pageId, userId});
+      expect(repository.findOneBy).toHaveBeenCalledWith({pageId, userId, isDeleted: false});
     });
 
     it('should throw NotFoundException if subscribe not found', async () => {

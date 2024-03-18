@@ -82,12 +82,12 @@ describe('newsService', () => {
     });
 
     it('should have called repository.findBy', async () => {
-      await service.getNewsList(pageId);
+      await service.getNewsList(pageId, 'DESC', 'DESC', 0, 10);
       expect(repository.find).toBeCalled();
     });
 
     it('should return repository.findBy result', async () => {
-      const foundNews = await service.getNewsList(pageId);
+      const foundNews = await service.getNewsList(pageId, 'DESC', 'DESC', 0, 10);
       expect(foundNews).toBe(foundNews);
     });
   });
