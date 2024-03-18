@@ -7,7 +7,7 @@ import {
 
 const swaggerCustomOptions: SwaggerCustomOptions = {
     swaggerOptions: {
-        persistAuthorization: true,
+        persistAuthorization: false,
     },
 };
 

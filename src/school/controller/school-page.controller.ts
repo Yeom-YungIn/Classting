@@ -11,7 +11,7 @@ import {
 import {PageService} from "../service/page.service";
 import {Subscribe} from "../entity/subscribe.entity";
 import {SubscribeService} from "../service/subscribe.service";
-import {ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
 import {News} from "../entity/news.entity";
 import {NewsService} from "../service/news.service";
 import {GetUser} from "../../common/decorator/get-user-decorator";
@@ -29,6 +29,7 @@ import {ResponseNewsDTO} from "../dto/news-response.dto";
 @ApiTags("/school-page")
 @Controller('/school-page')
 @UseGuards(AuthGuard())
+@ApiBearerAuth('access-token')
 export class SchoolPageController {
     constructor(
         private readonly pageService: PageService,
@@ -39,28 +40,28 @@ export class SchoolPageController {
 
     @Post()
     @ApiOperation({summary: "학교 페이지 생성", description: "학교 관리자는 학교 페이지를 생성할 수 있다"})
-    @ApiOkResponse({
+    @ApiCreatedResponse({
         status: 201,
         description: "create new page",
-        type: SuccessResponsePageDTO,
+        type: ResponsePageDTO,
     })
     async savePage(
         @Body() createPageDto: CreatePageDTO,
         @GetUser() user
     ): Promise<ResponsePageDTO> {
         if (user.role !== UserRoleType.ADMIN) {
-            throw new UnauthorizedException();
+            throw new ForbiddenException();
         }
         const {schoolName, location} = createPageDto;
-        return await this.pageService.createPage(schoolName, location, user);
+        return await this.pageService.createPage(schoolName, location, user.id);
     }
 
     @Post("/subscription/:pageId")
     @ApiOperation({summary: "페이지 구독", description: "학생은 학교 페이지를 구독할 수 있다."})
-    @ApiOkResponse({
+    @ApiCreatedResponse({
         status: 201,
         description: "create new subscribe",
-        type: SuccessResponsePageDTO,
+        type: ResponseSubscribeDTO,
     })
     async subscribePage(
         @Param('pageId') pageId: number,
@@ -69,7 +70,6 @@ export class SchoolPageController {
         if (user.role !== UserRoleType.STUDENT) {
             throw new ForbiddenException();
         }
-
         const foundPage = await this.pageService.findPageById(pageId);
         return await this.subscribeService.createSubscribe(foundPage.pageId, user.id);
     }
