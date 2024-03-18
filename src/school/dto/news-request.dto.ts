@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsNumber, IsObject, IsOptional, IsString} from "class-validator";
+import {IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
 import {SortTypes} from "../../common/types";
 

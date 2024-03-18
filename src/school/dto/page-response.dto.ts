@@ -1,17 +1,5 @@
-import {IsNotEmpty, IsNumber, IsObject, IsOptional, IsString} from "class-validator";
+import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
-import {SortTypes} from "../../common/types/sort.type";
-import {
-    Column,
-    CreateDateColumn,
-    DeleteDateColumn,
-    Entity, ManyToMany,
-    OneToMany,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn
-} from "typeorm";
-import {News} from "../entity/news.entity";
-import {Subscribe} from "../entity/subscribe.entity";
 
 export class SuccessResponsePageDTO {
 

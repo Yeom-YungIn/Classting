@@ -11,7 +11,7 @@ import {
 import {PageService} from "../service/page.service";
 import {Subscribe} from "../entity/subscribe.entity";
 import {SubscribeService} from "../service/subscribe.service";
-import {ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
+import {ApiOkResponse, ApiOperation, ApiTags} from "@nestjs/swagger";
 import {News} from "../entity/news.entity";
 import {NewsService} from "../service/news.service";
 import {GetUser} from "../../common/decorator/get-user-decorator";

@@ -5,7 +5,7 @@ import { SubscribeService } from '../service/subscribe.service';
 import { Subscribe } from '../entity/subscribe.entity';
 import {NewsService} from "../service/news.service";
 import {Page} from "../entity/page.entity";
-import {AuthGuard, PassportModule} from "@nestjs/passport";
+import {AuthGuard} from "@nestjs/passport";
 import {UserRoleType} from "../../common/types";
 import {CreatePageDTO} from "../dto/page-request.dto";
 

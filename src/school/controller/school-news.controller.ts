@@ -11,7 +11,6 @@ import {
 import {AuthGuard} from "@nestjs/passport";
 import {GetUser} from "../../common/decorator/get-user-decorator";
 import {SuccessResponseNewsDTO, ResponseNewsDTO} from "../dto/news-response.dto";
-import {News} from "../entity/news.entity";
 
 
 @ApiTags('/school-news')
@@ -48,8 +47,7 @@ export class SchoolNewsController {
     async updateNews(
         @Body() updateNewsDto: UpdateNewsDTO
     ): Promise<SuccessResponseNewsDTO> {
-        const updatedNews =  await this.newsService.updateNews(updateNewsDto.newsId, updateNewsDto.content);
-        return updatedNews;
+        return await this.newsService.updateNews(updateNewsDto.newsId, updateNewsDto.content);
     }
 
     @Delete()

@@ -1,7 +1,4 @@
-import {IsNotEmpty, IsNumber, IsString} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
-import {Column, CreateDateColumn, DeleteDateColumn, ManyToMany, PrimaryColumn, UpdateDateColumn} from "typeorm";
-import {Page} from "../entity/page.entity";
 
 export class ResponseSubscribeDTO {
 
