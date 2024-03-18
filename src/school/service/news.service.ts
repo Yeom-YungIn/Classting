@@ -2,6 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {News} from "../entity/news.entity";
 import {Repository} from "typeorm";
+import {SortTypes} from "../../common/types";
 
 
 @Injectable()
@@ -33,22 +34,36 @@ export class NewsService {
      * 페이지 뉴스 조회
      * @param pageId 페이지 ID
      * */
-    async getNewsList(pageId: number) {
-        const found = await this.newsRepository.find({
-            where: { pageId },
-            order: { createdAt: 'DESC' },
-            skip: 0,
-            take: 10,
+    async getNewsList(pageId: number, createdAt: SortTypes, updatedAt: SortTypes, skip: number, take: number) {
+        let order: any = {updatedAt: 'DESC', createdAt: 'DESC'};
+        if (createdAt) {
+            order.createdAt = createdAt;
+        }
+        if (updatedAt) {
+            order.updatedAt = updatedAt;
+        }
+        const foundNewsList: News[] = await this.newsRepository.find({
+            where: {
+                pageId ,
+                isDeleted: false
+            },
+            order: order,
+            skip,
+            take
         });
-        return found;
+        return foundNewsList;
     }
+
 
     /**
      * 뉴스 조회
      * @param newsId 뉴스 ID
      * */
-    async getNewsById(newsId: number) {
-        const foundNews: News = await this.newsRepository.findOneBy({newsId});
+    async getNewsById(newsId: number): Promise<News> {
+        const foundNews: News = await this.newsRepository.findOneBy({
+            newsId,
+            isDeleted: false
+        });
         if (!foundNews) {
             throw new NotFoundException();
         }

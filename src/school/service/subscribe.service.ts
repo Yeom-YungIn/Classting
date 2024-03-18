@@ -15,7 +15,10 @@ export class SubscribeService {
      * @param userId 유저 ID
      * */
     async getSubscribeList(userId: string): Promise<Subscribe[]> {
-        return this.subscribeRepository.findBy({userId});
+        return this.subscribeRepository.findBy({
+            userId,
+            isDeleted: false
+        });
     }
 
     /**
@@ -24,7 +27,7 @@ export class SubscribeService {
      * @param userId 유저 ID
      * */
     async getSubscribePage(pageId: number, userId: string): Promise<Subscribe> {
-        const foundSubscribePage: Subscribe =  await this.subscribeRepository.findOneBy({pageId, userId})
+        const foundSubscribePage: Subscribe =  await this.subscribeRepository.findOneBy({pageId, userId, isDeleted: false})
         if(!foundSubscribePage) {
             throw new NotFoundException();
         }
@@ -36,7 +39,7 @@ export class SubscribeService {
      * @param pageId 페이지 ID
      * @param userId 유저 ID
      * */
-    async createSubscribe(pageId: number, userId: string) {
+    async createSubscribe(pageId: number, userId: string): Promise<Subscribe> {
         const createdSubscribe = await this.subscribeRepository.create({
             pageId,
             userId,
