@@ -1,6 +1,6 @@
 export const UserStateType = {
-    ADMIN: "ADMIN",
-    STUDENT: "STUDENT",
+    ACTIVE: "ACTIVE",
+    INACTIVE: "INACTIVE",
 } as const;
 
 export type UserStateType = keyof typeof UserStateType;

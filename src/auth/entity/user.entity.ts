@@ -1,5 +1,5 @@
 import {Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryColumn, Entity} from "typeorm";
-import {UserRoleType, UserStateType} from "../types";
+import {UserRoleType, UserStateType} from "../../common/types";
 
 
 @Entity()
