@@ -1,0 +1,17 @@
+{
+  "db": {
+    "host": "127.0.0.1",
+    "username": "local",
+    "password": "",
+    "type": "postgres",
+    "port": 5432,
+    "database": "classting",
+    "synchronize": true,
+    "autoLoadEntities": true
+  },
+
+  "jwt": {
+    "expiresIn": 3600,
+    "secretKey": "youngIn_classting"
+  }
+}
