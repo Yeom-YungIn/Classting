@@ -12,7 +12,5 @@ export const typeORMConfig : TypeOrmModuleOptions = {
     password:  process.env.RDS_PASSWORD || dbConfig.password,
     entities: ["dist/**/*.entity.js"],
     synchronize: dbConfig.synchronize,
-    autoLoadEntities: dbConfig.autoLoadEntities,
-    logger: "simple-console",
-    logging: true
+    autoLoadEntities: dbConfig.autoLoadEntities
 }
