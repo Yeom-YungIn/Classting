@@ -34,7 +34,7 @@ CREATE DATABASE classting;
 
 ```json
 // DB config modify
-// ./config/defualt.json
+// /config/defualt.json
 
   "db": {
     "host": "127.0.0.1",
