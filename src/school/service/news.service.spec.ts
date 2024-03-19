@@ -3,19 +3,15 @@ import { NewsService } from './news.service';
 import {Repository} from "typeorm";
 import {getRepositoryToken} from "@nestjs/typeorm";
 import {News} from "../entity/news.entity";
-
-
-const TEST_ADMIN_USER = {id: "admin", role: "admin"}
+import {TEST_ADMIN_USER,  TEST_NEWS, TEST_NEWS_ID} from "../../../test/data/test.data";
 
 describe('newsService', () => {
   let service: NewsService;
   let repository: Repository<News>;
-  let news: News;
+  let news;
 
   beforeEach(async () => {
-    news = new News();
-    news.pageId = 1;
-    news.content = "content";
+    news = TEST_NEWS
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -124,9 +120,9 @@ describe('newsService', () => {
     let newsId: number;
 
     beforeEach(() => {
-      newsId = 1;
+      newsId = TEST_NEWS_ID;
       foundNews = {...news}
-      foundNews.newsId = 1;
+      foundNews.newsId = TEST_NEWS_ID;
 
       service.getNewsById = jest.fn().mockResolvedValue(foundNews);
       repository.update = jest.fn().mockResolvedValue({affected: 1});
@@ -163,9 +159,9 @@ describe('newsService', () => {
     let deletedNews: News;
 
     beforeEach(() => {
-      newsId = 1;
+      newsId = TEST_NEWS_ID;
       foundNews = {...news};
-      foundNews.newsId = 1;
+      foundNews.newsId = TEST_NEWS_ID;
 
       deletedNews = new News();
       deletedNews.newsId = newsId;

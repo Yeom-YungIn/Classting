@@ -6,17 +6,15 @@ import { Subscribe } from '../entity/subscribe.entity';
 import {NewsService} from "../service/news.service";
 import {Page} from "../entity/page.entity";
 import {AuthGuard} from "@nestjs/passport";
-import {UserRoleType} from "../../common/types";
 import {CreatePageDTO} from "../dto/page-request.dto";
 import {CustomPassportModule} from "../../common/passport/passport.module";
-
-const TEST_SCHOOL_NAME: string = "TEST_SCHOOL_NAME";
-const TEST_LOCATION: string = "TEST_LOCATION";
-const TEST_ADMIN_USER_ID: string = "admin";
-const TEST_STUDENT_USER_ID: string = "student";
-let ADMIN = {id: TEST_ADMIN_USER_ID, role: UserRoleType.ADMIN};
-let STUDENT = {id: TEST_STUDENT_USER_ID, role: UserRoleType.STUDENT};
-const TEST_PAGE_ID: number = 1;
+import {
+  TEST_ADMIN_USER,
+  TEST_LOCATION,
+  TEST_PAGE_ID,
+  TEST_SCHOOL_NAME,
+  TEST_STUDENT_USER, TEST_STUDENT_USER_ID
+} from "../../../test/data/test.data";
 
 describe('SchoolPageController', () => {
   let controller: SchoolPageController;
@@ -77,8 +75,8 @@ describe('SchoolPageController', () => {
   describe('savePage', () => {
     it('should call pageService.createPage with correct arguments', async () => {
       const createPageDTO: CreatePageDTO = { schoolName: 'Test School', location: 'Test Location' };
-      await controller.savePage(createPageDTO, ADMIN);
-      expect(pageService.createPage).toHaveBeenCalledWith(createPageDTO.schoolName, createPageDTO.location, ADMIN.id);
+      await controller.savePage(createPageDTO, TEST_ADMIN_USER);
+      expect(pageService.createPage).toHaveBeenCalledWith(createPageDTO.schoolName, createPageDTO.location, TEST_ADMIN_USER.id);
     });
   });
 
@@ -88,7 +86,7 @@ describe('SchoolPageController', () => {
     });
 
     it('should call pageService.{findPageById &createSubscribe}', async () => {
-      await controller.subscribePage(TEST_PAGE_ID, STUDENT);
+      await controller.subscribePage(TEST_PAGE_ID, TEST_STUDENT_USER);
 
       expect(pageService.findPageById).toHaveBeenCalledWith(TEST_PAGE_ID);
       expect(subscribeService.createSubscribe).toHaveBeenCalledWith(TEST_PAGE_ID, TEST_STUDENT_USER_ID);
@@ -100,7 +98,7 @@ describe('SchoolPageController', () => {
     it('should call pageService.findPageById and subscribeService.deleteSubscribe', async () => {
       jest.spyOn(pageService, 'findPageById').mockResolvedValueOnce(foundPage as any);
 
-      await controller.cancelSubscribePage(TEST_PAGE_ID, STUDENT);
+      await controller.cancelSubscribePage(TEST_PAGE_ID, TEST_STUDENT_USER);
 
       expect(pageService.findPageById).toHaveBeenCalledWith(TEST_PAGE_ID);
       expect(subscribeService.deleteSubscribe).toHaveBeenCalledWith(TEST_PAGE_ID, TEST_STUDENT_USER_ID);
@@ -115,7 +113,7 @@ describe('SchoolPageController', () => {
       const subscribeList: Subscribe[] = [newSubscribe];
       jest.spyOn(subscribeService, 'getSubscribeList').mockResolvedValueOnce(subscribeList);
 
-      const result = await controller.getSubscribePageList(STUDENT);
+      const result = await controller.getSubscribePageList(TEST_STUDENT_USER);
       expect(subscribeService.getSubscribeList).toHaveBeenCalledWith(TEST_STUDENT_USER_ID);
       expect(result).toEqual(subscribeList);
     });

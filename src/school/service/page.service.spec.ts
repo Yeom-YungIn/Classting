@@ -3,18 +3,22 @@ import {PageService} from "./page.service";
 import {Repository} from "typeorm";
 import {Page} from "../entity/page.entity";
 import {getRepositoryToken} from "@nestjs/typeorm";
+import {
+  TEST_ADMIN_USER_ID,
+  TEST_LOCATION,
+  TEST_PAGE,
+  TEST_PAGE_ID,
+  TEST_SCHOOL_NAME
+} from "../../../test/data/test.data";
 
 describe('pageService', () => {
   let pageId: number, schoolName: string, location: string;
   let service: PageService;
   let repository: Repository<Page>;
-  let page: Page;
+  let page;
 
   beforeEach(async () => {
-    pageId = 1, schoolName = "new school", location = "seoul";
-    page = new Page();
-    page.pageId = pageId;
-    page.schoolName = "schoolName";
+    page = TEST_PAGE
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -60,7 +64,7 @@ describe('pageService', () => {
   });
 
   describe('createPage', () => {
-    let newPage, publisherId = 'admin';
+    let newPage, publisherId = TEST_ADMIN_USER_ID;
     beforeEach(() => {
       newPage = {...page};
       repository.create = jest.fn();

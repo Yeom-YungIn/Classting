@@ -4,6 +4,7 @@ import {Repository} from "typeorm";
 import {Subscribe} from "../entity/subscribe.entity";
 import {getRepositoryToken} from "@nestjs/typeorm";
 import {NotFoundException} from "@nestjs/common";
+import {TEST_DEL_SUBSCRIBE, TEST_PAGE_ID, TEST_STUDENT_USER_ID, TEST_SUBSCRIBE} from "../../../test/data/test.data";
 
 describe('subscribeService', () => {
   let service: SubscribeService;
@@ -11,8 +12,8 @@ describe('subscribeService', () => {
   let pageId: number, userId: string;
 
   beforeEach(async () => {
-    pageId = 1;
-    userId = 'testUser';
+    pageId = TEST_PAGE_ID
+    userId = TEST_STUDENT_USER_ID;
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -33,11 +34,9 @@ describe('subscribeService', () => {
   });
 
   describe('getSubscribeList',() => {
-    let foundSubList: Subscribe[];
+    let foundSubList;
     beforeEach(() => {
-      foundSubList = [new Subscribe()];
-      foundSubList[0].pageId = pageId;
-      foundSubList[0].userId = userId;
+      foundSubList = [TEST_SUBSCRIBE]
 
       repository.findBy = jest.fn().mockResolvedValueOnce(foundSubList);
     });
@@ -62,12 +61,9 @@ describe('subscribeService', () => {
   });
 
   describe('getSubscribePage',() => {
-    let foundSubPage: Subscribe;
+    let foundSubPage;
     beforeEach(() => {
-      foundSubPage = new Subscribe();
-      foundSubPage.pageId = pageId;
-      foundSubPage.userId = userId;
-      foundSubPage.isDeleted = false;
+      foundSubPage = TEST_SUBSCRIBE
 
       repository.findOneBy = jest.fn().mockResolvedValueOnce(foundSubPage);
     });
@@ -97,11 +93,9 @@ describe('subscribeService', () => {
   });
 
   describe('createSubscribe', () => {
-    let newSubscribe: Subscribe
+    let newSubscribe;
     beforeEach(() => {
-      newSubscribe = new Subscribe();
-      newSubscribe.pageId = pageId;
-      newSubscribe.userId = userId;
+      newSubscribe = TEST_SUBSCRIBE;
 
       repository.findOne = jest.fn();
       repository.create = jest.fn();
@@ -130,11 +124,9 @@ describe('subscribeService', () => {
   });
 
   describe('deleteSubscribe', () => {
-    let deletedSubscribe: Subscribe;
+    let deletedSubscribe;
     beforeEach(() => {
-      deletedSubscribe = new Subscribe();
-      deletedSubscribe.userId = userId;
-      deletedSubscribe.pageId = pageId;
+      deletedSubscribe = TEST_DEL_SUBSCRIBE;
 
       service.getSubscribePage = jest.fn().mockResolvedValueOnce(deletedSubscribe);
       repository.update = jest.fn().mockResolvedValue({affected: 1});

@@ -7,11 +7,7 @@ import {AuthGuard} from "@nestjs/passport";
 import {SubscribeService} from "../service/subscribe.service";
 import {ResponseNewsFeedDTO} from "../dto/news-response.dto";
 import {CustomPassportModule} from "../../common/passport/passport.module";
-
-const TEST_CONTENT: string = "TEST_CONTENT";
-const TEST_PAGE_ID: number = 1;
-const TEST_NEWS_ID: number = 1;
-const TEST_ADMIN_USER = { id: "admin", role: "admin" };
+import {TEST_ADMIN_USER, TEST_CONTENT, TEST_NEWS_ID, TEST_PAGE_ID} from "../../../test/data/test.data";
 
 describe('SchoolNewsController', () => {
   let controller: SchoolNewsController;
