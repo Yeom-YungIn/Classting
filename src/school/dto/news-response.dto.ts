@@ -44,3 +44,13 @@ export class ResponseNewsDTO {
     @ApiProperty({ example: null, description: "삭제일" })
     deletedAt: Date;
 }
+
+export class ResponseNewsFeedDTO {
+    @ApiProperty({ example: "1", description: "뉴스 ID" })
+    @IsNumber()
+    newsId: number;
+
+    @ApiProperty({ example: "TEST_CONTENT", description: "뉴스 내용" })
+    @IsString()
+    content: string;
+}

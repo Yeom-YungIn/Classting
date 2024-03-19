@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Patch, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Patch, Post, UseGuards} from '@nestjs/common';
 import {NewsService} from "../service/news.service";
 import {CreateNewsDTO, DeleteNewsDTO, UpdateNewsDTO} from "../dto/news-request.dto";
 import {
@@ -10,7 +10,8 @@ import {
 } from "@nestjs/swagger";
 import {AuthGuard} from "@nestjs/passport";
 import {GetUser} from "../../common/decorator/get-user-decorator";
-import {SuccessResponseNewsDTO, ResponseNewsDTO} from "../dto/news-response.dto";
+import {SuccessResponseNewsDTO, ResponseNewsDTO, ResponseNewsFeedDTO} from "../dto/news-response.dto";
+import {SubscribeService} from "../service/subscribe.service";
 
 
 @ApiTags('/school-news')
@@ -19,7 +20,8 @@ import {SuccessResponseNewsDTO, ResponseNewsDTO} from "../dto/news-response.dto"
 @ApiBearerAuth('access-token')
 export class SchoolNewsController {
     constructor(
-        private readonly newsService : NewsService
+        private readonly newsService : NewsService,
+        private readonly subscribeService : SubscribeService
     ) {
     }
 
@@ -61,5 +63,18 @@ export class SchoolNewsController {
         @Body() deleteNews: DeleteNewsDTO
     ): Promise<SuccessResponseNewsDTO> {
         return await this.newsService.deleteNews(deleteNews.newsId);
+    }
+
+    @Get("/subscription/feeds")
+    @ApiOperation({summary: "뉴스 피드", description: "학생은 구독 중인 학교 소식을 자신의 뉴스피드에서 모아볼 수 있다."})
+    @ApiOkResponse({
+        status: 201,
+        description: "get news feeds",
+        type: [ResponseNewsFeedDTO],
+    })
+    async getNewsFeeds(
+        @GetUser() user
+    ): Promise<ResponseNewsFeedDTO[]> {
+        return await this.subscribeService.getNewsFeeds(user.id);
     }
 }

@@ -17,7 +17,7 @@ export class SubscribeService {
     async getSubscribeList(userId: string): Promise<Subscribe[]> {
         return this.subscribeRepository.findBy({
             userId,
-            isDeleted: false
+            isDeleted: false,
         });
     }
 
@@ -40,12 +40,19 @@ export class SubscribeService {
      * @param userId 유저 ID
      * */
     async createSubscribe(pageId: number, userId: string): Promise<Subscribe> {
-        const createdSubscribe = await this.subscribeRepository.create({
-            pageId,
-            userId,
-        });
+        const existingSubscribe = await this.subscribeRepository.findOne({ where: { pageId, userId } });
 
-        return await this.subscribeRepository.save(createdSubscribe);
+        if (existingSubscribe) {
+            existingSubscribe.isDeleted = false;
+            existingSubscribe.deletedAt = null;
+            return await this.subscribeRepository.save(existingSubscribe);
+        } else {
+            const createdSubscribe = await this.subscribeRepository.create({
+                pageId,
+                userId,
+            });
+            return await this.subscribeRepository.save(createdSubscribe);
+        }
     }
 
     /**
@@ -62,5 +69,25 @@ export class SubscribeService {
         if (deleteSubscribe.affected) {
             return { result: "success", pageId: foundSubscribe.pageId }
         }
+    }
+
+    /**
+     * 뉴스 피드 조회
+     * @param userId 유저 ID
+     * */
+    async getNewsFeeds(userId: string): Promise<{newsId: number, content: string}[]> {
+        return await this.subscribeRepository
+            .createQueryBuilder('s')
+            .leftJoinAndSelect('s.page', 'p')
+            .innerJoinAndSelect('p.news', 'n')
+            .where('s.userId = :userId', { userId })
+            .andWhere('((s.isDeleted = true and s.deletedAt > n.createdAt) or (s.isDeleted = false and n.createdAt >= s.createdAt))')
+            .select([
+                'n.newsId AS newsId',
+                'n.content AS content'
+            ])
+            .orderBy('n.updatedAt', 'DESC')
+            .orderBy('n.createdAt', 'DESC')
+            .getRawMany();
     }
 }
