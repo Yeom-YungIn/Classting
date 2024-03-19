@@ -60,7 +60,7 @@ npm run start
 npm test
 
 ##coverage Test
-npm test:cov
+npm run test:cov
 ```
 
 ### API Docs
