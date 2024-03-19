@@ -3,7 +3,9 @@ import { SchoolNewsController } from './school-news.controller';
 import { NewsService } from '../service/news.service';
 import {CreateNewsDTO, DeleteNewsDTO, UpdateNewsDTO} from '../dto/news-request.dto';
 import { News } from "../entity/news.entity";
-import { AuthGuard } from "@nestjs/passport";
+import {AuthGuard, PassportModule} from "@nestjs/passport";
+import {SubscribeService} from "../service/subscribe.service";
+import {ResponseNewsFeedDTO} from "../dto/news-response.dto";
 
 const TEST_CONTENT: string = "TEST_CONTENT";
 const TEST_PAGE_ID: number = 1;
@@ -13,9 +15,11 @@ const TEST_ADMIN_USER = { id: "admin", role: "admin" };
 describe('SchoolNewsController', () => {
   let controller: SchoolNewsController;
   let newsService: NewsService;
+  let subscribeService: SubscribeService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [PassportModule.register({ defaultStrategy: 'jwt',})],
       controllers: [SchoolNewsController],
       providers: [
         {
@@ -25,6 +29,12 @@ describe('SchoolNewsController', () => {
             updateNews: jest.fn(),
             deleteNews: jest.fn(),
           },
+        },
+        {
+          provide: SubscribeService,
+          useValue: {
+            getNewsFeeds: jest.fn(),
+          }
         },
         {
           provide: AuthGuard,
@@ -37,6 +47,7 @@ describe('SchoolNewsController', () => {
 
     controller = module.get<SchoolNewsController>(SchoolNewsController);
     newsService = module.get<NewsService>(NewsService);
+    subscribeService = module.get<SubscribeService>(SubscribeService);
   });
 
   describe('createNews', () => {
@@ -87,6 +98,20 @@ describe('SchoolNewsController', () => {
 
       expect(newsService.deleteNews).toHaveBeenCalledWith(deleteNews.newsId);
       expect(result).toEqual(deletedNews);
+    });
+  });
+
+  describe('getNewsFeeds', () => {
+    it('should call newsService.deleteNews', async () => {
+      const newFeeds = new ResponseNewsFeedDTO();
+      newFeeds.content = TEST_CONTENT;
+      newFeeds.newsId = TEST_NEWS_ID;
+       jest.spyOn(subscribeService, 'getNewsFeeds').mockResolvedValueOnce([newFeeds]);
+
+      const result = await controller.getNewsFeeds(TEST_ADMIN_USER.id);
+
+      expect(subscribeService.getNewsFeeds).toBeCalled();
+      expect(result).toEqual([newFeeds]);
     });
   });
 });

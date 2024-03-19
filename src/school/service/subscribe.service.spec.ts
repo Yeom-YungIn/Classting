@@ -103,6 +103,7 @@ describe('subscribeService', () => {
       newSubscribe.pageId = pageId;
       newSubscribe.userId = userId;
 
+      repository.findOne = jest.fn();
       repository.create = jest.fn();
       repository.save = jest.fn().mockResolvedValue(newSubscribe);
     });
@@ -112,8 +113,9 @@ describe('subscribeService', () => {
       expect(typeof service.createSubscribe).toBe('function');
     });
 
-    it('should have call repository.{create & save}', async () => {
+    it('should have call repository.{findOne & create & save}', async () => {
       await service.createSubscribe(pageId, userId);
+      expect(repository.findOne).toBeCalled();
       expect(repository.create).toBeCalledWith({pageId, userId});
       expect(repository.save).toBeCalled();
     });
@@ -121,6 +123,7 @@ describe('subscribeService', () => {
     it('return new subscribe object', async () => {
       const result = await service.createSubscribe(pageId, userId);
       expect(result).toBeDefined();
+      expect(result).toBe(newSubscribe);
       expect(result.pageId).toBe(pageId);
       expect(result.userId).toBe(userId);
     });

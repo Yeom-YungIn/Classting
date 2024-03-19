@@ -76,7 +76,7 @@ describe('SchoolPageController', () => {
     it('should call pageService.createPage with correct arguments', async () => {
       const createPageDTO: CreatePageDTO = { schoolName: 'Test School', location: 'Test Location' };
       await controller.savePage(createPageDTO, ADMIN);
-      expect(pageService.createPage).toHaveBeenCalledWith(createPageDTO.schoolName, createPageDTO.location, ADMIN);
+      expect(pageService.createPage).toHaveBeenCalledWith(createPageDTO.schoolName, createPageDTO.location, ADMIN.id);
     });
   });
 
