@@ -16,7 +16,6 @@ export function setupSwagger(app: INestApplication): void {
         .setTitle('Classting')
         .setDescription('클래스팅 개발 과제')
         .setVersion('1.0.0')
-        //JWT 토큰 설정
         .addBearerAuth(
             {
                 type: 'http',

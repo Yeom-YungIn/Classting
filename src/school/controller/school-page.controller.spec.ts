@@ -8,6 +8,7 @@ import {Page} from "../entity/page.entity";
 import {AuthGuard} from "@nestjs/passport";
 import {UserRoleType} from "../../common/types";
 import {CreatePageDTO} from "../dto/page-request.dto";
+import {CustomPassportModule} from "../../common/passport/passport.module";
 
 const TEST_SCHOOL_NAME: string = "TEST_SCHOOL_NAME";
 const TEST_LOCATION: string = "TEST_LOCATION";
@@ -26,6 +27,7 @@ describe('SchoolPageController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CustomPassportModule],
       controllers: [SchoolPageController],
       providers: [
         {

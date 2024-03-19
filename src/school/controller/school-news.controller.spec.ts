@@ -3,9 +3,10 @@ import { SchoolNewsController } from './school-news.controller';
 import { NewsService } from '../service/news.service';
 import {CreateNewsDTO, DeleteNewsDTO, UpdateNewsDTO} from '../dto/news-request.dto';
 import { News } from "../entity/news.entity";
-import {AuthGuard, PassportModule} from "@nestjs/passport";
+import {AuthGuard} from "@nestjs/passport";
 import {SubscribeService} from "../service/subscribe.service";
 import {ResponseNewsFeedDTO} from "../dto/news-response.dto";
+import {CustomPassportModule} from "../../common/passport/passport.module";
 
 const TEST_CONTENT: string = "TEST_CONTENT";
 const TEST_PAGE_ID: number = 1;
@@ -19,7 +20,7 @@ describe('SchoolNewsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PassportModule.register({ defaultStrategy: 'jwt',})],
+      imports: [CustomPassportModule],
       controllers: [SchoolNewsController],
       providers: [
         {

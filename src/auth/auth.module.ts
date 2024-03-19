@@ -3,10 +3,10 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {User} from "./entity/user.entity";
 import {JwtModule} from "@nestjs/jwt";
 import * as config from 'config';
-import {PassportModule} from "@nestjs/passport";
 import {JwtStrategy} from "./jwt.strategy";
 import {AuthController} from "./controller/auth.controller";
 import {AuthService} from "./service/auth.service";
+import {CustomPassportModule} from "../common/passport/passport.module";
 const jwtConfig = config.get('jwt');
 @Module({
   imports: [
@@ -17,13 +17,11 @@ const jwtConfig = config.get('jwt');
         expiresIn: jwtConfig.expiresIn,
       }
     }),
-    PassportModule.register({
-      defaultStrategy: 'jwt',
-    })
+    CustomPassportModule
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [JwtStrategy, PassportModule],
+  exports: [JwtStrategy, CustomPassportModule],
 })
 export class AuthModule {
   constructor(private authService: AuthService)  {
